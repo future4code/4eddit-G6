@@ -5,7 +5,9 @@ import LoginPage from '../LoginPage/LoginPage.js';
 
 export const routes = {
   root:"/",
-  signUp:"/signup"
+  signUp:"/signup",
+  feedPost:"/signup/feedpost",
+  post:"signup/feedpost/post"
 };
 
 function Router(props) {

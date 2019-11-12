@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { routes } from '../Router';
-import { push } from 'connected-react-router'
+import { push } from 'connected-react-router';
+import { loginAction } from '../../actions';
 
 const StyledContainer = styled.div`
     display: flex;
@@ -23,6 +24,9 @@ class LoginPage extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault() //evita que a página seja recarregada 
+        const{email, password} = this.state.form
+        console.log(this.state)
+        this.props.doLogin(email, password)
     }
 
     handleInputChange = name => event => {
@@ -39,12 +43,23 @@ class LoginPage extends Component {
                 <div>
                     <form onSubmit={this.handleSubmit}>
                         <div>
-                            <label htmlFor="login">Login</label>
-                            <input id="login" name="login" onChange={this.handleInputChange} />
+                            <label htmlFor="email">email</label>
+                            <input
+                                id="email"
+                                name="email"
+                                onChange={this.handleInputChange("email")}
+                                value={this.state.form["email"]}
+                            />
                         </div>
                         <div>
                             <label htmlFor="password">Password</label>
-                            <input id="password" name="password" type="password" onChange={this.handleInputChange} />
+                            <input
+                                id="password"
+                                name="password"
+                                type="password"
+                                onChange={this.handleInputChange("password")}
+                                value={this.state.form["password"]}
+                            />
                         </div>
 
                         <button type="submit">Entrar</button>
@@ -58,8 +73,9 @@ class LoginPage extends Component {
 
 function mapDispatchToProps(dispatch) {
     return {
-        goToSignUp:() => dispatch(push(routes.signUp)) 
+        goToSignUp: () => dispatch(push(routes.signUp)),
+        doLogin: (email, password)=> dispatch(loginAction(email, password))
     }
 }
 
-export default connect(null,mapDispatchToProps)(LoginPage);
+export default connect(null, mapDispatchToProps)(LoginPage);
