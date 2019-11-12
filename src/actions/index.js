@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const loginAction = (email, password)=>async dispatch => {
+export const loginAction = (email, password) => async dispatch => {
     const request = await axios.post(
         "https://us-central1-missao-newton.cloudfunctions.net/fourEddit/login",
         {
@@ -9,4 +9,16 @@ export const loginAction = (email, password)=>async dispatch => {
         }
     )
     window.localStorage.setItem("token", request.data.token);
+}
+
+export const signupAction = (username, email, password) => async dispatch => {
+    const request = await axios.post(
+        "https://us-central1-missao-newton.cloudfunctions.net/fourEddit/signup",
+        {
+            email,
+            password,
+            username
+        }
+    )
+    console.log(request)
 } 
