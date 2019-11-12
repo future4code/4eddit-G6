@@ -74,7 +74,8 @@ class LoginPage extends Component {
 function mapDispatchToProps(dispatch) {
     return {
         goToSignUp: () => dispatch(push(routes.signUp)),
-        doLogin: (email, password)=> dispatch(loginAction(email, password))
+        doLogin: (email, password)=> dispatch(loginAction(email, password)),
+        goToFeedPage:() => dispatch(push(routes.feedPost))
     }
 }
 
