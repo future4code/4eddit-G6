@@ -9,6 +9,7 @@ const StyledContainer = styled.div`
     min-height:20vh;
     border:2px solid black;
     justify-content: space-between;
+    cursor: pointer;
 `
 const StyledHeader = styled.header`
     justify-content: flex-start;
@@ -27,12 +28,16 @@ const StyledFooter = styled.footer`
 `
 
 function Post(props) {
-    const { title, text, votesCount, username, commentsNumber } = props.post
+    const { id, title, text, votesCount, username, commentsNumber } = props.post
+
+    const handleClickDetail = () => {
+        props.onClickDetail(id)
+    }
     return (
-        <StyledContainer>
+        <StyledContainer onClick={handleClickDetail}>
             <StyledHeader>
                 {title}------ user:{username}
-                </StyledHeader>
+            </StyledHeader>
             <StyledSection>
                 {text}
             </StyledSection>

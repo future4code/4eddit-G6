@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { postAction, fetchPostsAction } from '../../actions';
 import Post from '../../components/post/';
-
+import { routes } from '../Router'
+import { push } from "connected-react-router"
 
 const StyledContainer = styled.div`
     display: flex;
@@ -26,9 +27,15 @@ class FeedPage extends Component {
     }
 
     handleSubmitCreatePost = (event) => {
-        event.preventDefault() //evita que a página seja recarregada 
-        const { title, text } = this.state.post
-        this.props.doPost(title, text)
+        event.preventDefault()
+        const token = window.localStorage.getItem("token");
+        if (!token) {
+            this.props.goToLogin();
+        }
+        else {
+            const { title, text } = this.state.post
+            this.props.doPost(title, text)
+        }
     }
 
     handleInputChange = name => event => {
@@ -36,9 +43,13 @@ class FeedPage extends Component {
         this.setState({ post: { ...this.state.post, [name]: value } })
     }
 
+    handleClickDetail = (id) => {
+       this.props.goToPost(id)
+    }
+
     render() {
         const allPosts = this.props.feed ? this.props.feed.map((el, i) => {
-            return <Post post={el} key={i}/>
+            return <Post post={el} key={i} onClickDetail={this.handleClickDetail} />
         }) : ""
         return (
             <StyledContainer>
@@ -76,7 +87,9 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         doPost: (title, text) => dispatch(postAction(title, text)),
-        fetchPosts: () => dispatch(fetchPostsAction())
+        fetchPosts: () => dispatch(fetchPostsAction()),
+        goToLogin: () => dispatch(push(routes.login)),
+        goToPost: (id) => dispatch(push(`/feed/${id}`))
     }
 }
 
