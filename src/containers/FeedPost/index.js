@@ -20,7 +20,7 @@ class FeedPage extends Component {
             post: {}
         }
     }
-    
+
     componentDidMount() {
         this.props.fetchPosts()
     }
@@ -37,7 +37,6 @@ class FeedPage extends Component {
     }
 
     render() {
-        console.log(this.props.feed)
         const allPosts = this.props.feed ? this.props.feed.map((el, i) => {
             return <Post post={el} key={i}/>
         }) : ""

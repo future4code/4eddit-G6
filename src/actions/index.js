@@ -39,11 +39,9 @@ export const signupAction = (username, email, password) => async dispatch => {
             username
         }
     )
-    console.log(request)
 } 
 
 export const postAction = (title, text) => async dispatch => {
-    console.log(title, text)
     const request = await axios.post(
         "https://us-central1-missao-newton.cloudfunctions.net/fourEddit/posts",
         {
@@ -56,5 +54,5 @@ export const postAction = (title, text) => async dispatch => {
             }
         }
     )
-    console.log(request)
+    dispatch(fetchPostsAction())
 } 

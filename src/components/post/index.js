@@ -22,6 +22,8 @@ const StyledSection = styled.section`
 const StyledFooter = styled.footer`
     justify-content: flex-end;
     flex-grow: 1;
+    display:flex;
+    flex-direction:row;
 `
 
 function Post(props) {
@@ -35,8 +37,11 @@ function Post(props) {
                 {text}
             </StyledSection>
             <StyledFooter>
+                <button>UpVote</button>
                 votos:{votesCount} comentários:{commentsNumber}
+                <button>downVote</button>
             </StyledFooter>
+
         </StyledContainer>
     )
 }
