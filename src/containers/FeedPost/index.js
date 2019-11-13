@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { postAction } from '../../actions';
+import { postAction, fetchPostsAction } from '../../actions';
+import Post from '../../components/post/';
+
 
 const StyledContainer = styled.div`
     display: flex;
@@ -12,16 +14,20 @@ const StyledContainer = styled.div`
 `
 
 class FeedPage extends Component {
-    constructor(props){
+    constructor(props) {
         super(props)
-        this.state={
-            post:{}
+        this.state = {
+            post: {}
         }
+    }
+    
+    componentDidMount() {
+        this.props.fetchPosts()
     }
 
     handleSubmitCreatePost = (event) => {
         event.preventDefault() //evita que a página seja recarregada 
-        const{title, text} = this.state.post
+        const { title, text } = this.state.post
         this.props.doPost(title, text)
     }
 
@@ -31,6 +37,10 @@ class FeedPage extends Component {
     }
 
     render() {
+        console.log(this.props.feed)
+        const allPosts = this.props.feed ? this.props.feed.map((el, i) => {
+            return <Post post={el} key={i}/>
+        }) : ""
         return (
             <StyledContainer>
                 <div>
@@ -48,29 +58,27 @@ class FeedPage extends Component {
                             rows="5"
                             cols="40"
                             onChange={this.handleInputChange("text")}
-                            value={this.state.post["text"]} 
+                            value={this.state.post["text"]}
                         />
                         <button type="submit">Criar Post</button>
                     </form>
                 </div>
-                <div>
-                    post 1
-                </div>
-                <div>
-                    post 1
-                </div>
-                <div>
-                    post 1
-                </div>
+                {allPosts}
             </StyledContainer>
         )
     }
 }
 
+function mapStateToProps(state) {
+    return {
+        feed: state.feed.posts
+    }
+}
 function mapDispatchToProps(dispatch) {
     return {
-        doPost: (title, text)=> dispatch(postAction(title, text))
+        doPost: (title, text) => dispatch(postAction(title, text)),
+        fetchPosts: () => dispatch(fetchPostsAction())
     }
 }
 
-export default connect(null, mapDispatchToProps)(FeedPage);
+export default connect(mapStateToProps, mapDispatchToProps)(FeedPage);
