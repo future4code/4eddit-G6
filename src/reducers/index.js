@@ -6,6 +6,6 @@ import { post } from "./post"
 export const generateReducers = history =>
   combineReducers({
     router: connectRouter(history),
-    feed
+    feed,
     post
   });

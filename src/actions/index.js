@@ -67,7 +67,6 @@ export const postAction = (title, text) => async dispatch => {
     dispatch(fetchPostsAction())
 } 
 
-}
 
 export const fetchPostDetail = (id) => async dispatch => {
     const request = await axios.get(
