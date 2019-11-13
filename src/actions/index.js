@@ -1,10 +1,11 @@
 import axios from 'axios';
-
+import { routes } from '../containers/Router'
+import { push } from "connected-react-router"
 
 export const setFeed = (posts) => ({
-    type:"SET_FEED",
-    payload:{
-        posts:posts.posts
+    type: "SET_FEED",
+    payload: {
+        posts: posts.posts
     }
 })
 export const setPostDetail = (post) => ({
@@ -14,11 +15,11 @@ export const setPostDetail = (post) => ({
     }
 })
 
-export const fetchPostsAction = () =>async dispatch =>{
+export const fetchPostsAction = () => async dispatch => {
     const request = await axios.get(
         "https://us-central1-missao-newton.cloudfunctions.net/fourEddit/posts",
         {
-            headers:{
+            headers: {
                 auth: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IlRIR0FWV2dQdXF3SHNqdnBvT0hQIiwidXNlcm5hbWUiOiJqb2FvMjAwNyIsImVtYWlsIjoiam9hbzIwMDdAdGVzdGUuY29tLmJyIiwiaWF0IjoxNTczNTgwOTkxfQ.OrCbbjp3Pgq0y6Cb-LVXvjYFGjy57bAya4My_DboHi4"
             }
         }
@@ -37,6 +38,7 @@ export const loginAction = (email, password) => async dispatch => {
         }
     )
     window.localStorage.setItem("token", request.data.token);
+    dispatch(push(routes.root))
 }
 
 export const signupAction = (username, email, password) => async dispatch => {
@@ -48,8 +50,8 @@ export const signupAction = (username, email, password) => async dispatch => {
             username
         }
     )
-
-} 
+    dispatch(push(routes.root))
+}
 
 export const postAction = (title, text) => async dispatch => {
     const request = await axios.post(
@@ -59,13 +61,13 @@ export const postAction = (title, text) => async dispatch => {
             title
         },
         {
-            headers:{
-                auth:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IlRIR0FWV2dQdXF3SHNqdnBvT0hQIiwidXNlcm5hbWUiOiJqb2FvMjAwNyIsImVtYWlsIjoiam9hbzIwMDdAdGVzdGUuY29tLmJyIiwiaWF0IjoxNTczNTgwOTkxfQ.OrCbbjp3Pgq0y6Cb-LVXvjYFGjy57bAya4My_DboHi4"
+            headers: {
+                auth: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IlRIR0FWV2dQdXF3SHNqdnBvT0hQIiwidXNlcm5hbWUiOiJqb2FvMjAwNyIsImVtYWlsIjoiam9hbzIwMDdAdGVzdGUuY29tLmJyIiwiaWF0IjoxNTczNTgwOTkxfQ.OrCbbjp3Pgq0y6Cb-LVXvjYFGjy57bAya4My_DboHi4"
             }
         }
     )
     dispatch(fetchPostsAction())
-} 
+}
 
 
 export const fetchPostDetail = (id) => async dispatch => {

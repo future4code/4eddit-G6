@@ -11,7 +11,7 @@ export const routes = {
   signUp: "/signup",
   feedPost: "/feed/",
   post: "/feed/:id",
-  login:"/login"
+  login: "/login"
 };
 
 function Router(props) {

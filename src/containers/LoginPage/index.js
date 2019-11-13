@@ -23,9 +23,8 @@ class LoginPage extends Component {
     }
 
     handleSubmit = (event) => {
-        event.preventDefault() //evita que a página seja recarregada 
+        event.preventDefault()
         const{email, password} = this.state.form
-        console.log(this.state)
         this.props.doLogin(email, password)
     }
 

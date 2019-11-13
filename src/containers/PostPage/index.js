@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { fetchPostDetail, postCommentAction, voteCommentAction, votePostAction } from '../../actions';
+import { routes } from '../Router'
+import { push } from "connected-react-router"
 
 const StyledContainer = styled.div`
     display: flex;
@@ -12,6 +14,7 @@ const StyledContainer = styled.div`
 `
 
 function PostPage(props) {
+    const token = window.localStorage.getItem("token");
     const { id } = props.match.params
     useEffect(() => { props.fetchPost(id) }, []);
 
@@ -22,7 +25,12 @@ function PostPage(props) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        props.doPostComment(id, form.comment);
+        if (!token) {
+            props.goToLogin();
+        }
+        else {
+            props.doPostComment(id, form.comment);
+        }
     }
     const handleOnChangeForm = name => event => {
         const { value } = event.target;
@@ -30,16 +38,25 @@ function PostPage(props) {
     }
 
     const handleVotePost = (id, direction) => {
-        const { userVoteDirection } = props.post;
-        const newVote = userVoteDirection === 0 ? direction : (userVoteDirection === direction ? 0 : direction);
-        console.log(id,newVote);
-        props.doVotePost(id, newVote);
+        if (!token) {
+            props.goToLogin();
+        }
+        else {
+            const { userVoteDirection } = props.post;
+            const newVote = userVoteDirection === 0 ? direction : (userVoteDirection === direction ? 0 : direction);
+            props.doVotePost(id, newVote);
+        }
     }
     const handleVoteComment = (commentId, direction) => {
-        const index = comments.map(el => { return el.id }).indexOf(commentId);
-        const comment = comments[index];
-        const newVote = comment.userVoteDirection === 0 ? direction : (comment.userVoteDirection === direction ? 0 : direction);
-        props.doVoteComment(id, commentId, newVote);
+        if (!token) {
+            props.goToLogin();
+        }
+        else {
+            const index = comments.map(el => { return el.id }).indexOf(commentId);
+            const comment = comments[index];
+            const newVote = comment.userVoteDirection === 0 ? direction : (comment.userVoteDirection === direction ? 0 : direction);
+            props.doVoteComment(id, commentId, newVote);
+        }
     }
 
     const commentsDiv = comments ? comments.map((el, i) => {
@@ -91,7 +108,8 @@ function mapDispatchToProps(dispatch) {
         fetchPost: (id) => dispatch(fetchPostDetail(id)),
         doPostComment: (id, comment) => dispatch(postCommentAction(id, comment)),
         doVoteComment: (postId, commentId, direction) => dispatch(voteCommentAction(postId, commentId, direction)),
-        doVotePost: (id, direction) => dispatch(votePostAction(id, direction))
+        doVotePost: (id, direction) => dispatch(votePostAction(id, direction)),
+        goToLogin: () => dispatch(push(routes.login))
 
     }
 }
