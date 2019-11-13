@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { fetchPostDetail, postCommentAction, voteCommentAction } from '../../actions';
+import { fetchPostDetail, postCommentAction, voteCommentAction, votePostAction } from '../../actions';
 
 const StyledContainer = styled.div`
     display: flex;
@@ -25,8 +25,15 @@ function PostPage(props) {
         props.doPostComment(id, form.comment);
     }
     const handleOnChangeForm = name => event => {
-        const { value } = event.target
-        setForm({ [name]: value })
+        const { value } = event.target;
+        setForm({ [name]: value });
+    }
+
+    const handleVotePost = (id, direction) => {
+        const { userVoteDirection } = props.post;
+        const newVote = userVoteDirection === 0 ? direction : (userVoteDirection === direction ? 0 : direction);
+        console.log(id,newVote);
+        props.doVotePost(id, newVote);
     }
     const handleVoteComment = (commentId, direction) => {
         const index = comments.map(el => { return el.id }).indexOf(commentId);
@@ -34,6 +41,7 @@ function PostPage(props) {
         const newVote = comment.userVoteDirection === 0 ? direction : (comment.userVoteDirection === direction ? 0 : direction);
         props.doVoteComment(id, commentId, newVote);
     }
+
     const commentsDiv = comments ? comments.map((el, i) => {
         return (
             <div key={i}>
@@ -54,9 +62,9 @@ function PostPage(props) {
                 <h1>{title}</h1>
                 <h3>{text}</h3>
                 <div>
-                    <button>Upvote</button>
+                    <button onClick={() => handleVotePost(id, 1)}>Upvote</button>
                     {votesCount}
-                    <button>Downvote</button>
+                    <button onClick={() => handleVotePost(id, -1)}>Downvote</button>
                     {commentsNumber} comentários
                 </div>
             </div>
@@ -82,7 +90,8 @@ function mapDispatchToProps(dispatch) {
     return {
         fetchPost: (id) => dispatch(fetchPostDetail(id)),
         doPostComment: (id, comment) => dispatch(postCommentAction(id, comment)),
-        doVoteComment: (postId, commentId, direction) => dispatch(voteCommentAction(postId, commentId, direction))
+        doVoteComment: (postId, commentId, direction) => dispatch(voteCommentAction(postId, commentId, direction)),
+        doVotePost: (id, direction) => dispatch(votePostAction(id, direction))
 
     }
 }
