@@ -4,6 +4,7 @@ import { Switch, Route } from "react-router-dom";
 import LoginPage from "../LoginPage";
 import SignupPage from "../SignupPage";
 import FeedPost from "../FeedPost";
+import PostPage from "../PostPage";
 
 export const routes = {
   root: "/",
@@ -17,7 +18,8 @@ function Router(props) {
   return (
     <ConnectedRouter history={props.history}>
       <Switch>
-      <Route path={routes.login} component={LoginPage} />
+        <Route path={routes.login} component={LoginPage} />
+        <Route path={routes.post} component={PostPage} />
         <Route path={routes.signUp} component={SignupPage} />
         <Route path={routes.root} component={FeedPost} />
       </Switch>
