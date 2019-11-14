@@ -28,7 +28,6 @@ export const fetchPostsAction = () => async dispatch => {
 }
 
 
-
 export const loginAction = (email, password) => async dispatch => {
     const request = await axios.post(
         "https://us-central1-missao-newton.cloudfunctions.net/fourEddit/login",

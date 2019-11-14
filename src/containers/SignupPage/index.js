@@ -30,9 +30,6 @@ function SignupPage(props) {
     setForm({ ...form, [name]: value });
   };
 
-  /*const handleClickSignUp = () => {
-    this.props.goToSignUp();
-  };*/
   return (
     <StyledContainer>
       <div>

@@ -24,7 +24,7 @@ class LoginPage extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault()
-        const{email, password} = this.state.form
+        const { email, password } = this.state.form
         this.props.doLogin(email, password)
     }
 
@@ -73,8 +73,8 @@ class LoginPage extends Component {
 function mapDispatchToProps(dispatch) {
     return {
         goToSignUp: () => dispatch(push(routes.signUp)),
-        doLogin: (email, password)=> dispatch(loginAction(email, password)),
-        goToFeedPage:() => dispatch(push(routes.feedPost))
+        doLogin: (email, password) => dispatch(loginAction(email, password)),
+        goToFeedPage: () => dispatch(push(routes.feedPage))
     }
 }
 

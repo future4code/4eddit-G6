@@ -22,7 +22,6 @@ function PostPage(props) {
 
     const { username, title, text, comments, commentsNumber, userVoteDirection, votesCount } = props.post
 
-
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!token) {

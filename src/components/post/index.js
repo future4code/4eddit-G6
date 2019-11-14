@@ -27,7 +27,7 @@ const StyledFooter = styled.footer`
     flex-direction:row;
 `
 
-function Post(props) {
+function PostCard(props) {
     const { id, title, text, votesCount, username, commentsNumber } = props.post
 
     const handleClickDetail = () => {
@@ -51,4 +51,4 @@ function Post(props) {
     )
 }
 
-export default Post;
+export default PostCard;

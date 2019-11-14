@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { postAction, fetchPostsAction } from '../../actions';
-import Post from '../../components/post/';
+import PostCard from '../../components/post';
 import { routes } from '../Router'
 import { push } from "connected-react-router"
 
@@ -44,12 +44,12 @@ class FeedPage extends Component {
     }
 
     handleClickDetail = (id) => {
-       this.props.goToPost(id)
+        this.props.goToPost(id)
     }
 
     render() {
         const allPosts = this.props.feed ? this.props.feed.map((el, i) => {
-            return <Post post={el} key={i} onClickDetail={this.handleClickDetail} />
+            return <PostCard post={el} key={i} onClickDetail={this.handleClickDetail} />
         }) : ""
         return (
             <StyledContainer>
