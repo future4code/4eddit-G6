@@ -16,12 +16,20 @@ const StyledContainer = styled.div`
 function PostPage(props) {
     const token = window.localStorage.getItem("token");
     const { id } = props.match.params
-    useEffect(() => { props.fetchPost(id) }, []);
+
+    useEffect(() => {
+        const token = window.localStorage.getItem("token");
+        if (!token) {
+            props.goToLogin();
+        }
+        else {
+            props.fetchPost(id)
+        }
+    }, []);
 
     const [form, setForm] = useState({})
 
-    const { username, title, text, comments, commentsNumber, userVoteDirection, votesCount } = props.post
-
+    const { username, title, text, comments, commentsNumber, votesCount } = props.post
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -109,7 +117,7 @@ function mapDispatchToProps(dispatch) {
         doPostComment: (id, comment) => dispatch(postCommentAction(id, comment)),
         doVoteComment: (postId, commentId, direction) => dispatch(voteCommentAction(postId, commentId, direction)),
         doVotePost: (id, direction) => dispatch(votePostAction(id, direction)),
-        goToLogin: () => dispatch(push(routes.login))
+        goToLogin: () => dispatch(push(routes.loginPage))
 
     }
 }

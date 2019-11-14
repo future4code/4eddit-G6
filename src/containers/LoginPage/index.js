@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { routes } from '../Router';
@@ -13,68 +13,62 @@ const StyledContainer = styled.div`
     min-height:100vh;
 `
 
-class LoginPage extends Component {
-    constructor(props) {
-        super(props)
+function LoginPage(props) {
 
-        this.state = {
-            form: {}
-        }
-    }
+    const [form, setForm] = useState({})
 
-    handleSubmit = (event) => {
+    const handleSubmit = (event) => {
         event.preventDefault()
-        const{email, password} = this.state.form
-        this.props.doLogin(email, password)
+        const { email, password } = form
+        props.doLogin(email, password)
     }
 
-    handleInputChange = name => event => {
+    const handleInputChange = name => event => {
         const { value } = event.target
-        this.setState({ form: { ...this.state.form, [name]: value } })
+        setForm({ ...form, [name]: value })
     }
 
-    handleClickSignUp = () => {
-        this.props.goToSignUp()
+    const handleClickSignUp = () => {
+        props.goToSignUp()
     }
-    render() {
-        return (
-            <StyledContainer>
-                <div>
-                    <form onSubmit={this.handleSubmit}>
-                        <div>
-                            <label htmlFor="email">email</label>
-                            <input
-                                id="email"
-                                name="email"
-                                onChange={this.handleInputChange("email")}
-                                value={this.state.form["email"]}
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="password">Password</label>
-                            <input
-                                id="password"
-                                name="password"
-                                type="password"
-                                onChange={this.handleInputChange("password")}
-                                value={this.state.form["password"]}
-                            />
-                        </div>
+    return (
+        <StyledContainer>
+            <div>
+                <form onSubmit={handleSubmit}>
+                    <div>
+                        <label htmlFor="email">email</label>
+                        <input
+                            id="email"
+                            name="email"
+                            onChange={handleInputChange("email")}
+                            value={form["email"]}
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="password">Password</label>
+                        <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            onChange={handleInputChange("password")}
+                            value={form["password"]}
+                        />
+                    </div>
 
-                        <button type="submit">Entrar</button>
-                    </form>
-                    <button onClick={this.handleClickSignUp}>Cadastrar</button>
-                </div>
-            </StyledContainer>
-        )
-    }
+                    <button type="submit">Entrar</button>
+                </form>
+                <button onClick={handleClickSignUp}>Cadastrar</button>
+            </div>
+        </StyledContainer>
+    )
+
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        goToSignUp: () => dispatch(push(routes.signUp)),
-        doLogin: (email, password)=> dispatch(loginAction(email, password)),
-        goToFeedPage:() => dispatch(push(routes.feedPost))
+        goToSignUp: () => dispatch(push(routes.signUpPage)),
+        doLogin: (email, password) => dispatch(loginAction(email, password)),
+        goToFeedPage: () => dispatch(push(routes.feedPage))
     }
 }
 
