@@ -6,14 +6,25 @@ import PostCard from '../../components/post';
 import { routes } from '../Router'
 import { push } from "connected-react-router"
 import { Grid } from "@material-ui/core";
-
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import Navbar from "../../components/navbar"
+const StyledGrid = styled(Grid)`
+    > div,form{
+        margin-bottom: 16px;
+    }
+`
+const StyledForm = styled.form`
+    display: flex;
+    flex-direction: column;
+    width: 414px;
+`
 function FeedPage(props) {
-
+    const token = window.localStorage.getItem("token");
     const [post, setPost] = useState({})
 
     const { fetchPosts } = props;
     useEffect(() => {
-        const token = window.localStorage.getItem("token");
         if (!token) {
             props.goToLogin();
         }
@@ -55,39 +66,45 @@ function FeedPage(props) {
     }
 
     const allPosts = props.feed ? props.feed.map((el, i) => {
-        return <PostCard post={el} key={i} onClickDetail={handleClickDetail} onVote={handleVote}/>
+        return <PostCard post={el} key={i} onClickDetail={handleClickDetail} onVote={handleVote} />
     }) : ""
     return (
         <Grid
-        container
-        direction="column"
-        justify="center"
-        alignItems="center"
+            container
+            direction="column"
+            justify="center"
+            alignItems="center"
         >
-            <Grid item lg={8} xs={12} container alignItems="center">
-              <div>
-                <form onSubmit={handleSubmitCreatePost}>
-                    <label htmlFor="title">Criar Post </label>
-                    <input
-                        id="title"
+            <Navbar onLogin={props.goToLogin} isLogged={token ? true : false} onFeed={props.goToFeed} />
+            <StyledGrid item lg={4} sm={6} xs={12} container justify="center" wrap="wrap">
+                <StyledForm onSubmit={handleSubmitCreatePost}>
+                    <TextField
+                        id="outlined-title-input"
+                        label="Título"
+                        type="text"
                         name="title"
+                        margin="normal"
+                        variant="outlined"
                         onChange={handleInputChange("title")}
                         value={post["title"]}
                     />
-                    <textarea
+                    <TextField
+                        id="outlined-text-input"
+                        label="Post"
+                        type="text"
                         name="text"
-                        id="text"
-                        rows="5"
-                        cols="40"
+                        margin="normal"
+                        variant="outlined"
                         onChange={handleInputChange("text")}
                         value={post["text"]}
                     />
-                    <button type="submit">Criar Post</button>
-                </form>
-            </div>
-            {allPosts}  
-            </Grid>
-            
+                    <Button variant="contained" color="primary" type="submit">
+                        Postar!
+                    </Button>
+                </StyledForm>
+                {allPosts}
+            </StyledGrid>
+
         </Grid>
     )
 
@@ -104,6 +121,7 @@ function mapDispatchToProps(dispatch) {
         doPost: (title, text) => dispatch(postAction(title, text)),
         fetchPosts: () => dispatch(fetchPostsAction()),
         goToLogin: () => dispatch(push(routes.loginPage)),
+        goToFeed: () => dispatch(push(routes.root)),
         goToPost: (id) => dispatch(push(`/feed/${id}`)),
         doVotePost: (id, direction) => dispatch(votePostAction(id, direction))
     }
