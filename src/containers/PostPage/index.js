@@ -4,15 +4,22 @@ import styled from 'styled-components';
 import { fetchPostDetail, postCommentAction, voteCommentAction, votePostAction } from '../../actions';
 import { routes } from '../Router'
 import { push } from "connected-react-router"
-
-const StyledContainer = styled.div`
+import { Grid } from "@material-ui/core";
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import PostDetail from "../../components/postDetail"
+import CommentDetail from "../../components/commentDetail"
+import Navbar from "../../components/navbar"
+const StyledGrid = styled(Grid)`
+    > div,form{
+        margin-bottom: 16px;
+    }
+`
+const StyledForm = styled.form`
     display: flex;
     flex-direction: column;
-    align-items: center;
-    width:100vw;
-    min-height:100vh;
+    width: 414px;
 `
-
 function PostPage(props) {
     const token = window.localStorage.getItem("token");
     const { id } = props.match.params
@@ -29,7 +36,7 @@ function PostPage(props) {
 
     const [form, setForm] = useState({})
 
-    const { username, title, text, comments, commentsNumber, votesCount } = props.post
+    const { comments, } = props.post
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -67,43 +74,42 @@ function PostPage(props) {
         }
     }
 
-    const commentsDiv = comments ? comments.map((el, i) => {
+    const commentsCard = comments ? comments.map((el, i) => {
         return (
-            <div key={i}>
-                <h4>{el.username}</h4>
-                <h5>{el.text}</h5>
-                <div>
-                    <button onClick={() => handleVoteComment(el.id, 1)}>Upvote</button>
-                    {el.votesCount}
-                    <button onClick={() => handleVoteComment(el.id, -1)}>Downvote</button>
-                </div>
-            </div>)
+            <CommentDetail comment={el} onVote={handleVoteComment} key={i}/>
+            )
     }) : ""
 
     return (
-        <StyledContainer>
-            <div>
-                <h5>{username}</h5>
-                <h1>{title}</h1>
-                <h3>{text}</h3>
+        <Grid
+            container
+            direction="column"
+            justify="center"
+            alignItems="center"
+        >
+            <Navbar onLogin={props.goToLogin} isLogged={token ? true:false} onFeed={props.goToFeed}/>
+            <StyledGrid item lg={4} sm={6} xs={12} container justify="center" wrap="wrap">
+                <PostDetail post={props.post} onVote={handleVotePost} />
+                <StyledForm onSubmit={handleSubmit}>
+                    <TextField
+                        id="outlined-comment-input"
+                        label="Deixe seu comentário"
+                        type="text"
+                        name="comment"
+                        margin="normal"
+                        variant="outlined"
+                        onChange={handleOnChangeForm("comment")}
+                        value={form["comment"]}
+                    />
+                    <Button variant="contained" color="primary" type="submit">
+                        Postar!
+                    </Button>
+                </StyledForm>
                 <div>
-                    <button onClick={() => handleVotePost(id, 1)}>Upvote</button>
-                    {votesCount}
-                    <button onClick={() => handleVotePost(id, -1)}>Downvote</button>
-                    {commentsNumber} comentários
+                    {commentsCard}
                 </div>
-            </div>
-            <div>
-                <form onSubmit={handleSubmit}>
-                    <label htmlFor="comment">Deixe seu comentário</label>
-                    <input id="comment" name="comment" onChange={handleOnChangeForm("comment")} />
-                    <button type="submit">Enviar</button>
-                </form>
-            </div>
-            <div>
-                {commentsDiv}
-            </div>
-        </StyledContainer>
+            </StyledGrid>
+        </Grid>
     )
 }
 function mapStateToProps(state) {
@@ -117,7 +123,8 @@ function mapDispatchToProps(dispatch) {
         doPostComment: (id, comment) => dispatch(postCommentAction(id, comment)),
         doVoteComment: (postId, commentId, direction) => dispatch(voteCommentAction(postId, commentId, direction)),
         doVotePost: (id, direction) => dispatch(votePostAction(id, direction)),
-        goToLogin: () => dispatch(push(routes.loginPage))
+        goToLogin: () => dispatch(push(routes.loginPage)),
+        goToFeed: () => dispatch(push(routes.root))
 
     }
 }

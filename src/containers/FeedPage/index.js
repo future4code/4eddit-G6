@@ -1,26 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { postAction, fetchPostsAction } from '../../actions';
+import { postAction, fetchPostsAction, votePostAction } from '../../actions';
 import PostCard from '../../components/post';
 import { routes } from '../Router'
 import { push } from "connected-react-router"
-
-const StyledContainer = styled.div`
+import { Grid } from "@material-ui/core";
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import Navbar from "../../components/navbar"
+const StyledGrid = styled(Grid)`
+    > div,form{
+        margin-bottom: 16px;
+    }
+`
+const StyledForm = styled.form`
     display: flex;
     flex-direction: column;
-    align-items: center;
-    width:100vw;
-    min-height:100vh;
+    width: 414px;
 `
-
 function FeedPage(props) {
-
+    const token = window.localStorage.getItem("token");
     const [post, setPost] = useState({})
 
     const { fetchPosts } = props;
     useEffect(() => {
-        const token = window.localStorage.getItem("token");
         if (!token) {
             props.goToLogin();
         }
@@ -54,33 +58,54 @@ function FeedPage(props) {
         }
     }
 
+    const handleVote = (id, direction) => {
+        const index = props.feed.map(el => { return el.id }).indexOf(id);
+        const userVoteDirection = props.feed[index].userVoteDirection;
+        const newVote = userVoteDirection === 0 ? direction : (userVoteDirection === direction ? 0 : direction);
+        props.doVotePost(id, newVote);
+    }
+
     const allPosts = props.feed ? props.feed.map((el, i) => {
-        return <PostCard post={el} key={i} onClickDetail={handleClickDetail} />
+        return <PostCard post={el} key={i} onClickDetail={handleClickDetail} onVote={handleVote} />
     }) : ""
     return (
-        <StyledContainer>
-            <div>
-                <form onSubmit={handleSubmitCreatePost}>
-                    <label htmlFor="title">Criar Post </label>
-                    <input
-                        id="title"
+        <Grid
+            container
+            direction="column"
+            justify="center"
+            alignItems="center"
+        >
+            <Navbar onLogin={props.goToLogin} isLogged={token ? true : false} onFeed={props.goToFeed} />
+            <StyledGrid item lg={4} sm={6} xs={12} container justify="center" wrap="wrap">
+                <StyledForm onSubmit={handleSubmitCreatePost}>
+                    <TextField
+                        id="outlined-title-input"
+                        label="Título"
+                        type="text"
                         name="title"
+                        margin="normal"
+                        variant="outlined"
                         onChange={handleInputChange("title")}
                         value={post["title"]}
                     />
-                    <textarea
+                    <TextField
+                        id="outlined-text-input"
+                        label="Post"
+                        type="text"
                         name="text"
-                        id="text"
-                        rows="5"
-                        cols="40"
+                        margin="normal"
+                        variant="outlined"
                         onChange={handleInputChange("text")}
                         value={post["text"]}
                     />
-                    <button type="submit">Criar Post</button>
-                </form>
-            </div>
-            {allPosts}
-        </StyledContainer>
+                    <Button variant="contained" color="primary" type="submit">
+                        Postar!
+                    </Button>
+                </StyledForm>
+                {allPosts}
+            </StyledGrid>
+
+        </Grid>
     )
 
 }
@@ -90,12 +115,15 @@ function mapStateToProps(state) {
         feed: state.feed.posts
     }
 }
+
 function mapDispatchToProps(dispatch) {
     return {
         doPost: (title, text) => dispatch(postAction(title, text)),
         fetchPosts: () => dispatch(fetchPostsAction()),
         goToLogin: () => dispatch(push(routes.loginPage)),
-        goToPost: (id) => dispatch(push(`/feed/${id}`))
+        goToFeed: () => dispatch(push(routes.root)),
+        goToPost: (id) => dispatch(push(`/feed/${id}`)),
+        doVotePost: (id, direction) => dispatch(votePostAction(id, direction))
     }
 }
 

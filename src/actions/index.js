@@ -31,9 +31,8 @@ export const fetchPostsAction = () => async dispatch => {
     catch{
 
     }
-    
-}
 
+}
 
 export const loginAction = (email, password) => async dispatch => {
     const request = await axios.post(
@@ -43,7 +42,7 @@ export const loginAction = (email, password) => async dispatch => {
             password
         }
     )
-    window.localStorage.setItem("token", request.data.token);
+    window.localStorage.setItem("token", request.data.token)
     dispatch(push(routes.root))
 }
 
@@ -130,5 +129,6 @@ export const votePostAction = (postId, direction) => async dispatch => {
         }
     )
     dispatch(fetchPostDetail(postId))
+    dispatch(fetchPostsAction())
 }
 

@@ -1,5 +1,4 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from 'react'
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -9,13 +8,18 @@ import IconButton from '@material-ui/core/IconButton';
 import IconUpVote from '@material-ui/icons/ArrowUpward';
 import IconDownVote from '@material-ui/icons/ArrowDownward';
 import IconComment from '@material-ui/icons/Announcement';
+import styled from 'styled-components';
 
 const StyledCard = styled(Card)`
     display: flex;
     width:414px;
 `
 const StyledCardActionArea = styled(CardActionArea)`
-    
+width: 100%;
+
+display: block;
+
+text-align: inherit;
 `
 const StyledCardActions = styled(CardActions)`
     display:flex;
@@ -27,8 +31,8 @@ const StyleBottomIcons = styled(Typography)`
     align-items: center;
     padding-left: 16px;
 `
-function PostCard(props) {
-    const { id, title, text, votesCount, username, userVoteDirection, commentsNumber,createdAt } = props.post
+export default function postDetail(props) {
+    const { id, title, text, votesCount, username, userVoteDirection, commentsNumber } = props.post
 
     const handleClickDetail = () => {
         props.onClickDetail(id)
@@ -44,9 +48,7 @@ function PostCard(props) {
 
     const colorUpvote = userVoteDirection === 1 ? "primary" : ""
     const colorDownvote = userVoteDirection === -1 ? "secondary" : "";
-    const date = new Date(createdAt).toLocaleDateString();
-    const time = new Date(createdAt).toLocaleTimeString();
-    
+
     return (
         <StyledCard>
             <StyledCardActions>
@@ -60,10 +62,10 @@ function PostCard(props) {
                     <IconDownVote />
                 </IconButton>
             </StyledCardActions>
-            <StyledCardActionArea onClick={handleClickDetail}>
+            <StyledCardActionArea >
                 <CardContent>
                     <Typography color="textSecondary" gutterBottom>
-                        Postado por u/{username} - {date} / {time}
+                        Postado por u/{username} a tantas h
                     </Typography>
                     <Typography variant="h5" component="h2">
                         {title}
@@ -79,5 +81,3 @@ function PostCard(props) {
         </StyledCard>
     )
 }
-
-export default PostCard;

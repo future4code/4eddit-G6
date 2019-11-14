@@ -2,16 +2,19 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import { signupAction } from "../../actions";
+import Navbar from "../../components/navbar"
+import { Grid } from "@material-ui/core";
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 
-const StyledContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100vw;
-  min-height: 100vh;
-`;
-
-
+const StyledForm = styled.form`
+    display: flex;
+    flex-direction: column;
+    width: 414px;
+`
+const StyledButton = styled(Button)`
+    margin-bottom: 16px;
+`
 function SignupPage(props) {
 
   const [form, setForm] = useState({})
@@ -28,9 +31,15 @@ function SignupPage(props) {
   };
 
   return (
-    <StyledContainer>
+    <Grid
+      container
+      direction="column"
+      justify="center"
+      alignItems="center"
+    >
+      <Navbar onLogin={props.goToLogin} isLogged={false} onFeed={props.goToFeed} />
       <div>
-        <form onSubmit={handleSubmit}>
+        <StyledForm onSubmit={handleSubmit}>
           <div>
             <label htmlFor="username">Username</label>
             <input
@@ -61,9 +70,42 @@ function SignupPage(props) {
           </div>
 
           <button type="submit">Cadastrar</button>
-        </form>
+          <TextField
+            id="outlined-username-input"
+            label="Nome de usuário"
+            type="text"
+            name="username"
+            margin="normal"
+            variant="outlined"
+            onChange={handleInputChange("username")}
+            value={form["username"]}
+          />
+          <TextField
+            id="outlined-email-input"
+            label="Email"
+            type="email"
+            name="email"
+            margin="normal"
+            variant="outlined"
+            onChange={handleInputChange("email")}
+            value={form["email"]}
+          />
+          <TextField
+            id="outlined-password-input"
+            label="Senha"
+            type="password"
+            name="password"
+            margin="normal"
+            variant="outlined"
+            onChange={handleInputChange("password")}
+            value={form["password"]}
+          />
+          <StyledButton variant="contained" color="primary" type="submit">
+            Cadastrar
+          </StyledButton>
+        </StyledForm>
       </div>
-    </StyledContainer>
+    </Grid>
   );
 }
 function mapDispatchToProps(dispatch) {
