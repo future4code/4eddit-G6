@@ -8,19 +8,19 @@ import PostPage from "../PostPage";
 
 export const routes = {
   root: "/",
-  signUp: "/signup",
+  signUpPage: "/signup",
   feedPage: "/feed/",
-  post: "/feed/:id",
-  login: "/login"
+  postPage: "/feed/:id",
+  loginPage: "/login"
 };
 
 function Router(props) {
   return (
     <ConnectedRouter history={props.history}>
       <Switch>
-        <Route path={routes.login} component={LoginPage} />
-        <Route path={routes.post} component={PostPage} />
-        <Route path={routes.signUp} component={SignupPage} />
+        <Route path={routes.loginPage} component={LoginPage} />
+        <Route path={routes.postPage} component={PostPage} />
+        <Route path={routes.signUpPage} component={SignupPage} />
         <Route path={routes.root} component={FeedPage} />
       </Switch>
     </ConnectedRouter>

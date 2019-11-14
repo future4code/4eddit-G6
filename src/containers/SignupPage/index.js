@@ -2,9 +2,6 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import { signupAction } from "../../actions";
-//import { routes } from "../Router";
-//import { push } from "connected-react-router";
-//import { loginAction } from '../../actions';
 
 const StyledContainer = styled.div`
   display: flex;

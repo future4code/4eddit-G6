@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { routes } from '../containers/Router'
 import { push } from "connected-react-router"
+const token = window.localStorage.getItem("token");
 
 export const setFeed = (posts) => ({
     type: "SET_FEED",
@@ -16,15 +17,21 @@ export const setPostDetail = (post) => ({
 })
 
 export const fetchPostsAction = () => async dispatch => {
-    const request = await axios.get(
-        "https://us-central1-missao-newton.cloudfunctions.net/fourEddit/posts",
-        {
-            headers: {
-                auth: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IlRIR0FWV2dQdXF3SHNqdnBvT0hQIiwidXNlcm5hbWUiOiJqb2FvMjAwNyIsImVtYWlsIjoiam9hbzIwMDdAdGVzdGUuY29tLmJyIiwiaWF0IjoxNTczNTgwOTkxfQ.OrCbbjp3Pgq0y6Cb-LVXvjYFGjy57bAya4My_DboHi4"
+    try {
+        const request = await axios.get(
+            "https://us-central1-missao-newton.cloudfunctions.net/fourEddit/posts",
+            {
+                headers: {
+                    auth: token
+                }
             }
-        }
-    )
-    dispatch(setFeed(request.data))
+        )
+        dispatch(setFeed(request.data))
+    }
+    catch{
+
+    }
+    
 }
 
 
@@ -61,7 +68,7 @@ export const postAction = (title, text) => async dispatch => {
         },
         {
             headers: {
-                auth: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IlRIR0FWV2dQdXF3SHNqdnBvT0hQIiwidXNlcm5hbWUiOiJqb2FvMjAwNyIsImVtYWlsIjoiam9hbzIwMDdAdGVzdGUuY29tLmJyIiwiaWF0IjoxNTczNTgwOTkxfQ.OrCbbjp3Pgq0y6Cb-LVXvjYFGjy57bAya4My_DboHi4"
+                auth: token
             }
         }
     )
@@ -73,7 +80,7 @@ export const fetchPostDetail = (id) => async dispatch => {
     const request = await axios.get(
         `https://us-central1-missao-newton.cloudfunctions.net/fourEddit/posts/${id}`, {
         headers: {
-            auth: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IlRIR0FWV2dQdXF3SHNqdnBvT0hQIiwidXNlcm5hbWUiOiJqb2FvMjAwNyIsImVtYWlsIjoiam9hbzIwMDdAdGVzdGUuY29tLmJyIiwiaWF0IjoxNTczNTgwOTkxfQ.OrCbbjp3Pgq0y6Cb-LVXvjYFGjy57bAya4My_DboHi4"
+            auth: token
         }
     }
     )
@@ -88,7 +95,7 @@ export const postCommentAction = (id, comment) => async dispatch => {
         },
         {
             headers: {
-                auth: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IlRIR0FWV2dQdXF3SHNqdnBvT0hQIiwidXNlcm5hbWUiOiJqb2FvMjAwNyIsImVtYWlsIjoiam9hbzIwMDdAdGVzdGUuY29tLmJyIiwiaWF0IjoxNTczNTgwOTkxfQ.OrCbbjp3Pgq0y6Cb-LVXvjYFGjy57bAya4My_DboHi4"
+                auth: token
             }
         }
     )
@@ -103,7 +110,7 @@ export const voteCommentAction = (postId, commentId, direction) => async dispatc
         },
         {
             headers: {
-                auth: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IlRIR0FWV2dQdXF3SHNqdnBvT0hQIiwidXNlcm5hbWUiOiJqb2FvMjAwNyIsImVtYWlsIjoiam9hbzIwMDdAdGVzdGUuY29tLmJyIiwiaWF0IjoxNTczNTgwOTkxfQ.OrCbbjp3Pgq0y6Cb-LVXvjYFGjy57bAya4My_DboHi4"
+                auth: token
             }
         }
     )
@@ -118,7 +125,7 @@ export const votePostAction = (postId, direction) => async dispatch => {
         },
         {
             headers: {
-                auth: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IlRIR0FWV2dQdXF3SHNqdnBvT0hQIiwidXNlcm5hbWUiOiJqb2FvMjAwNyIsImVtYWlsIjoiam9hbzIwMDdAdGVzdGUuY29tLmJyIiwiaWF0IjoxNTczNTgwOTkxfQ.OrCbbjp3Pgq0y6Cb-LVXvjYFGjy57bAya4My_DboHi4"
+                auth: token
             }
         }
     )

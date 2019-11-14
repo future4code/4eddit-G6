@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { postAction, fetchPostsAction } from '../../actions';
@@ -14,69 +14,75 @@ const StyledContainer = styled.div`
     min-height:100vh;
 `
 
-class FeedPage extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            post: {}
+function FeedPage(props) {
+
+    const [post, setPost] = useState({})
+
+    const { fetchPosts } = props;
+    useEffect(() => {
+        const token = window.localStorage.getItem("token");
+        if (!token) {
+            props.goToLogin();
         }
-    }
+        else { fetchPosts() }
+    }, [])
 
-    componentDidMount() {
-        this.props.fetchPosts()
-    }
-
-    handleSubmitCreatePost = (event) => {
+    const handleSubmitCreatePost = (event) => {
         event.preventDefault()
         const token = window.localStorage.getItem("token");
         if (!token) {
-            this.props.goToLogin();
+            props.goToLogin();
         }
         else {
-            const { title, text } = this.state.post
-            this.props.doPost(title, text)
+            const { title, text } = post
+            props.doPost(title, text)
         }
     }
 
-    handleInputChange = name => event => {
+    const handleInputChange = name => event => {
         const { value } = event.target
-        this.setState({ post: { ...this.state.post, [name]: value } })
+        setPost({ ...post, [name]: value })
     }
 
-    handleClickDetail = (id) => {
-        this.props.goToPost(id)
+    const handleClickDetail = (id) => {
+        const token = window.localStorage.getItem("token");
+        if (!token) {
+            props.goToLogin();
+        }
+        else {
+            props.goToPost(id)
+        }
     }
 
-    render() {
-        const allPosts = this.props.feed ? this.props.feed.map((el, i) => {
-            return <PostCard post={el} key={i} onClickDetail={this.handleClickDetail} />
-        }) : ""
-        return (
-            <StyledContainer>
-                <div>
-                    <form onSubmit={this.handleSubmitCreatePost}>
-                        <label htmlFor="title">Criar Post </label>
-                        <input
-                            id="title"
-                            name="title"
-                            onChange={this.handleInputChange("title")}
-                            value={this.state.post["title"]}
-                        />
-                        <textarea
-                            name="text"
-                            id="text"
-                            rows="5"
-                            cols="40"
-                            onChange={this.handleInputChange("text")}
-                            value={this.state.post["text"]}
-                        />
-                        <button type="submit">Criar Post</button>
-                    </form>
-                </div>
-                {allPosts}
-            </StyledContainer>
-        )
-    }
+    const allPosts = props.feed ? props.feed.map((el, i) => {
+        return <PostCard post={el} key={i} onClickDetail={handleClickDetail} />
+    }) : ""
+    return (
+        <StyledContainer>
+            <div>
+                <form onSubmit={handleSubmitCreatePost}>
+                    <label htmlFor="title">Criar Post </label>
+                    <input
+                        id="title"
+                        name="title"
+                        onChange={handleInputChange("title")}
+                        value={post["title"]}
+                    />
+                    <textarea
+                        name="text"
+                        id="text"
+                        rows="5"
+                        cols="40"
+                        onChange={handleInputChange("text")}
+                        value={post["text"]}
+                    />
+                    <button type="submit">Criar Post</button>
+                </form>
+            </div>
+            {allPosts}
+        </StyledContainer>
+    )
+
 }
 
 function mapStateToProps(state) {
@@ -88,7 +94,7 @@ function mapDispatchToProps(dispatch) {
     return {
         doPost: (title, text) => dispatch(postAction(title, text)),
         fetchPosts: () => dispatch(fetchPostsAction()),
-        goToLogin: () => dispatch(push(routes.login)),
+        goToLogin: () => dispatch(push(routes.loginPage)),
         goToPost: (id) => dispatch(push(`/feed/${id}`))
     }
 }
