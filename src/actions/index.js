@@ -130,5 +130,6 @@ export const votePostAction = (postId, direction) => async dispatch => {
         }
     )
     dispatch(fetchPostDetail(postId))
+    dispatch(fetchPostsAction())
 }
 

@@ -1,18 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { postAction, fetchPostsAction } from '../../actions';
+import { postAction, fetchPostsAction, votePostAction } from '../../actions';
 import PostCard from '../../components/post';
 import { routes } from '../Router'
 import { push } from "connected-react-router"
-
-const StyledContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width:100vw;
-    min-height:100vh;
-`
+import { Grid } from "@material-ui/core";
 
 function FeedPage(props) {
 
@@ -54,12 +47,25 @@ function FeedPage(props) {
         }
     }
 
+    const handleVote = (id, direction) => {
+        const index = props.feed.map(el => { return el.id }).indexOf(id);
+        const userVoteDirection = props.feed[index].userVoteDirection;
+        const newVote = userVoteDirection === 0 ? direction : (userVoteDirection === direction ? 0 : direction);
+        props.doVotePost(id, newVote);
+    }
+
     const allPosts = props.feed ? props.feed.map((el, i) => {
-        return <PostCard post={el} key={i} onClickDetail={handleClickDetail} />
+        return <PostCard post={el} key={i} onClickDetail={handleClickDetail} onVote={handleVote}/>
     }) : ""
     return (
-        <StyledContainer>
-            <div>
+        <Grid
+        container
+        direction="column"
+        justify="center"
+        alignItems="center"
+        >
+            <Grid item lg={8} xs={12} container alignItems="center">
+              <div>
                 <form onSubmit={handleSubmitCreatePost}>
                     <label htmlFor="title">Criar Post </label>
                     <input
@@ -79,8 +85,10 @@ function FeedPage(props) {
                     <button type="submit">Criar Post</button>
                 </form>
             </div>
-            {allPosts}
-        </StyledContainer>
+            {allPosts}  
+            </Grid>
+            
+        </Grid>
     )
 
 }
@@ -90,12 +98,14 @@ function mapStateToProps(state) {
         feed: state.feed.posts
     }
 }
+
 function mapDispatchToProps(dispatch) {
     return {
         doPost: (title, text) => dispatch(postAction(title, text)),
         fetchPosts: () => dispatch(fetchPostsAction()),
         goToLogin: () => dispatch(push(routes.loginPage)),
-        goToPost: (id) => dispatch(push(`/feed/${id}`))
+        goToPost: (id) => dispatch(push(`/feed/${id}`)),
+        doVotePost: (id, direction) => dispatch(votePostAction(id, direction))
     }
 }
 
